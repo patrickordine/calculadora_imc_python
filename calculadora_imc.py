@@ -1,3 +1,4 @@
+import sqlite3
 import tkinter
 from tkinter import *
 
@@ -25,7 +26,7 @@ class app():
         self.in_nome = Entry(textvariable=self.nome)
         self.in_nome.place(relx=0.26, rely=0.015, relwidth=0.7)
 
-        self.endereco = StringVar
+        self.endereco = StringVar()
         self.label_endereco = Label(text='Endereço Completo', bg=c1)
         self.label_endereco.place(relx=0.015, rely=0.115)
 
@@ -61,6 +62,14 @@ class app():
         botao3.place(relx=0.76, rely=0.7, relwidth=0.2)
 
     def btn_click(self):
+
+        con = sqlite3.connect("bddados.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS dados(nome TEXT, endereco TEXT, altura INTEGER,peso INTEGER)")
+        cur.execute("INSERT INTO dados(nome, endereco, altura, peso) VALUES (?,?,?,?)",
+                    (self.nome.get(), self.endereco.get(), self.altura.get(), self.peso.get()))
+        con.commit()
+
         p = self.peso.get()
         a = (self.altura.get())/100
         resultadoimc = p/(a*a)
